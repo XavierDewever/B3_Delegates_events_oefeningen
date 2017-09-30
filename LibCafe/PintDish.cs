@@ -7,13 +7,19 @@ using System.Threading.Tasks;
 
 namespace LibCafe
 {
+    // delegates
     public delegate void PintStartedHandler(object sender, EventArgs e);
     public delegate void PintCompletedHandler(object sender, PintCompletedArgs e);
+    public delegate void DishHalfWayHandler(object sender, EventArgs e);
+    public delegate void DishCompletedHandler(object sender, EventArgs e);
 
     public class PintDish
     {
+        // events
         public event PintStartedHandler PintStarted;
         public event PintCompletedHandler PintCompleted;
+        public event DishHalfWayHandler DishHalfway;
+        public event DishCompletedHandler DishCompleted;
 
         private int pintCount;
 
@@ -31,6 +37,13 @@ namespace LibCafe
             PintStarted?.Invoke(this, EventArgs.Empty);
             pintCount++;
             PintCompleted?.Invoke(this, new PintCompletedArgs());
+
+            int HalfWayPoint = MaxPints % 2 == 0 ? MaxPints / 2 : MaxPints / 2 + 1;
+            if (pintCount == HalfWayPoint)
+            {
+                DishHalfway?.Invoke(this, EventArgs.Empty);
+            }
+            
         }
     }
 
