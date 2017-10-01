@@ -34,9 +34,11 @@ namespace LibCafe
         public void AddPint()
         {
             if (pintCount >= MaxPints) throw new Exception("Dish full, order cancelled");
+
             PintStarted?.Invoke(this, EventArgs.Empty);
             pintCount++;
             PintCompleted?.Invoke(this, new PintCompletedArgs());
+            Thread.Sleep(1000);
 
             int HalfWayPoint = MaxPints % 2 == 0 ? MaxPints / 2 : MaxPints / 2 + 1;
             if (pintCount == HalfWayPoint)
@@ -44,6 +46,10 @@ namespace LibCafe
                 DishHalfway?.Invoke(this, EventArgs.Empty);
             }
             
+            if (pintCount == MaxPints)
+            {
+                DishCompleted?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 
